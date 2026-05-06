@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PLDT Billing Dashboard</title>
+  <style>
+
+<style>
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f4f6fb;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #ff6b6b, #ff8787);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+}
+
+.card {
+  border-left: 4px solid #f3d6d6;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+  min-width: 200px;
+}
+
+label {
+  font-size: 13px;
+  color: #444;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #005bb5;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,112,224,0.15);
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #f3d6d6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #005bb5;
+}
+
+.summary-box {
+  background: #eef4ff;
+  border-left: 5px solid #f3d6d6;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* HEADER ROW */
+th {
+  background: linear-gradient(135deg, #ff6b6b, #ff8787);
+  color: white;
+  padding: 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TABLE CELLS */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #f3d6d6;
+  text-align: center;
+  color: #333;
+}
+
+/* ROW HOVER EFFECT */
+tr:hover td {
+  background: #fff0f0;
+  transition: 0.2s;
+}
+
+/* LAST ROW CLEANUP */
+tr:last-child td {
+  border-bottom: none;
+}
+#installCheck {
+  transform: scale(1.4);
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.install-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <header class="app-header">
+    <h1>📡 PLDT Billing Generator System</h1>
+    <p>Fast • Accurate • Reliable</p>
+  </header>
+<h2> PLDT Billing Admin Dashboard</h2>
+</div>
+<div class="card">
+
+<div class="section-title">📋 Billing Details</div>
+
+<div class="row">
+  <div class="col">
+    <label>Billing Start Date</label>
+    <input type="date" id="startDate">
+  </div>
+
+  <div class="col">
+    <label>Activation Date</label>
+    <input type="date" id="activationDate">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <label>Previous Plan</label>
+    <input type="number" id="oldPlan">
+  </div>
+
+  <div class="col">
+    <label>New Plan</label>
+    <input type="number" id="newPlan">
+  </div>
+</div>
+
+</div>
+
+
+<!-- ADD-ONS CARD (SEPARATE AND CLEAN) -->
+<div class="card">
+
+<div class="section-title">📺 Add-ons</div>
+
+<div class="row">
+  <div class="col">
+    <label>Netflix</label>
+    <input type="number" id="netflix">
+    <input type="date" id="netflixDate">
+  </div>
+
+  <div class="col">
+    <label>Cignal</label>
+    <input type="number" id="cignal">
+    <input type="date" id="cignalDate">
+  </div>
+
+  <div class="col">
+    <label>Other</label>
+    <input type="number" id="other">
+    <input type="date" id="otherDate">
+  </div>
+</div>
+
+
+<label>Discount</label>
+<input type="number" id="discount">
+<h4>⚙️ Recurring Fees</h4>
+
+<label class="install-label">
+  <input type="checkbox" id="installCheck">
+  Installation & Activation Fee (PHP 100)
+</label>
+
+<div class="card">
+  <button onclick="generateBill()">💡 Generate Billing</button>
+</div>
+<div class="card summary-box">
+
+<div class="section-title">📊 Billing Summary</div>
+
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Amount</th>
+  </tr>
+
+  <tr><td>Total Days</td><td id="days"></td></tr>
+  <tr><td>Old Credit</td><td id="oldCredit"></td></tr>
+  <tr><td>New Charge</td><td id="newCharge"></td></tr>
+  <tr><td>Add-ons</td><td id="netflixOut"></td></tr>
+  <tr><td>Install Fee</td><td id="installOut"></td></tr>
+  <tr><td>Discount</td><td id="discountOut"></td></tr>
+  <tr><td>Total</td><td id="total"></td></tr>
+  <tr><td>Balance</td><td id="balance"></td></tr>
+</table>
+
+<br>
+
+<div class="highlight">
+  Total Due: <span id="carryOver"></span>
+</div>
+
+<p class="small-text">
+  System-generated billing summary. Please verify before posting.
+</p>
+
+</div>
+
+<script>
+
+function peso(n) {
+  return "PHP" + Number(n).toLocaleString(undefined, {
+    minimumFractionDigits: 2
+  });
+}
+
+// ================= HELPERS =================
+
+function safeDate(v) {
+  if (!v) return null;
+  const [y, m, d] = v.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  return isNaN(date.getTime()) ? null : date;
+}
+
+function safeNumber(v) {
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
+function daysBetween(a, b) {
+  if (!a || !b) return 0;
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+
+  // ISP FIX: inclusive billing (+1 day rule)
+  return Math.max(0, Math.floor((b - a) / msPerDay) + 1);
+}
+
+// ================= ADD-ON PRORATION =================
+
+function addon(rate, activationDate, start, end, totalDays) {
+
+  const act = safeDate(activationDate);
+  if (!act) return 0;
+
+  const effectiveStart = act < start ? start : act;
+
+  const usedDays = daysBetween(effectiveStart, end);
+
+  return +(rate * usedDays / totalDays).toFixed(2);
+}
+
+// ================= MAIN FUNCTION =================
+
+function generateBill() {
+
+  const start = safeDate(document.getElementById("startDate").value);
+  const activation = safeDate(document.getElementById("activationDate").value);
+
+const installChecked = document.getElementById("installCheck").checked;
+
+// Fixed fee
+const INSTALL_FEE = 100;
+
+const installTotal = installChecked ? INSTALL_FEE : 0;
+
+  if (!start || !activation) {
+    alert("Please fill Start Date and Activation Date");
+    return;
+  }
+
+ // Get same day next month
+const end = new Date(start);
+end.setMonth(end.getMonth() + 1);
+
+// Subtract 1 day → end of billing cycle
+end.setDate(end.getDate() - 1);
+
+// Auto total days (inclusive)
+const totalDays = daysBetween(start, end);
+
+  // MAIN PLAN
+  const oldPlan = safeNumber(document.getElementById("oldPlan").value);
+  const newPlan = safeNumber(document.getElementById("newPlan").value);
+
+ const oldDays = daysBetween(start, new Date(activation.getTime() - 86400000));
+  const newDays = Math.max(0, totalDays - oldDays);
+
+  const oldCredit = (oldPlan * oldDays) / totalDays;
+  const newCharge = (newPlan * newDays) / totalDays;
+
+  // ADD-ONS
+  const netflix = addon(
+  safeNumber(document.getElementById("netflix").value),
+  document.getElementById("netflixDate").value,
+  start,
+  end,
+  totalDays
+);
+
+const cignal = addon(
+  safeNumber(document.getElementById("cignal").value),
+  document.getElementById("cignalDate").value,
+  start,
+  end,
+  totalDays
+);
+
+const other = addon(
+  safeNumber(document.getElementById("other").value),
+  document.getElementById("otherDate").value,
+  start,
+  end,
+  totalDays
+);
+
+  const discount = safeNumber(document.getElementById("discount").value);
+
+  // TOTAL
+const netflixRate = safeNumber(document.getElementById("netflix").value);
+const cignalRate  = safeNumber(document.getElementById("cignal").value);
+const otherRate  = safeNumber(document.getElementById("other").value);
+
+  const total =
+  newPlan +
+  newCharge +
+  netflixRate +
+  cignalRate +
+  otherRate +
+  netflix +
+  cignal +
+  other +
+  installTotal -
+  discount;
+
+  const balance = total - oldCredit;
+
+  // OUTPUT SAFE
+  function set(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.innerText = value;
+  }
+
+  set("days", totalDays);
+  set("oldCredit", peso(oldCredit));
+  set("newCharge", peso(newCharge));
+  set("netflixOut", peso(netflix));
+  set("cignalOut", peso(cignal));
+  set("otherOut", peso(other));
+  set("discountOut", discount.toFixed(2));
+  set("installOut", peso(installTotal));
+  set("total", peso(total));
+  set("balance", peso(balance));
+
+  set("cycleStart", start.toISOString().split("T")[0]);
+  set("cycleEnd", end.toISOString().split("T")[0]);
+
+  set("totalBill", total.toFixed(2));
+  set("carryOver", (balance > 0 ? balance : 0).toFixed(2));
+  set("finalBill", peso(total - Math.max(balance, 0)));
+}
+
+</script>
+
+</body>
+</html>
